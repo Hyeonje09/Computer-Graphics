@@ -29,11 +29,13 @@ float bernstein(int n, int i, float t) {
 	float res;
 	res = combination(n, i) * pow(1 - t, n - i) * pow(t, i);
 	return res;
-}	
+}
 
 void Draw_Bezier_Curve(void) {
 	float dt = 1.0 / pp;
 	float sumx, sumy;
+	float p0x = point[0][0];
+	float p0y = point[0][1];
 
 	glBegin(GL_LINE_STRIP);
 	for (float time = 0; time <= 1.0; time += dt) {
@@ -41,8 +43,15 @@ void Draw_Bezier_Curve(void) {
 		for (int i = 0; i < num; i++) {
 			sumx += bernstein(num, i, time) * point[i][0];
 			sumy += bernstein(num, i, time) * point[i][1];
+			p0x = sumx;
+			p0y = sumy;
 		}
+		glVertex2f(p0x, p0y);
+		glVertex2f(sumx, sumy);
 	}
+	sumx = point[num - 1][0];
+	sumy = point[num - 1][1];
+	glVertex2f(p0x, p0y);
 	glVertex2f(sumx, sumy);
 	glEnd();
 }
