@@ -21,13 +21,19 @@ float factorial(int n) {
 
 float combination(int n, int i) {
 	float res;
-	res = factorial(n) / (factorial(n - i) * factorial(i));
+	if (n >= 1 && i <= n) {
+		res = factorial(n) / (factorial(n - i) * factorial(i));
+	}
+	else res = 1.0;
 	return res;
 }
 
 float bernstein(int n, int i, float t) {
 	float res;
-	res = combination(n, i) * pow(1 - t, n - i) * pow(t, i);
+	if (t >= 0.0 && t <= 1.0)
+		res = combination(n, i) * pow(1 - t, n - i) * pow(t, i);
+	else
+		res = 1.0;
 	return res;
 }
 
@@ -38,16 +44,16 @@ void Draw_Bezier_Curve(void) {
 	float p0y = point[0][1];
 
 	glBegin(GL_LINE_STRIP);
-	for (float time = 0; time <= 1.0; time += dt) {
+	for (float time = dt; time <= 1.0; time += dt) {
 		sumx = sumy = 0.0;
 		for (int i = 0; i < num; i++) {
-			sumx += bernstein(num, i, time) * point[i][0];
-			sumy += bernstein(num, i, time) * point[i][1];
-			p0x = sumx;
-			p0y = sumy;
+			sumx += bernstein(num - 1, i, time) * point[i][0];
+			sumy += bernstein(num - 1, i, time) * point[i][1];
 		}
 		glVertex2f(p0x, p0y);
 		glVertex2f(sumx, sumy);
+		p0x = sumx;
+		p0y = sumy;
 	}
 	sumx = point[num - 1][0];
 	sumy = point[num - 1][1];
