@@ -6,7 +6,7 @@
 
 float	radius, theta, phi;
 float	offset = 3.0;
-float	right = 1.0;
+float	right = 90.0, right_move = 0.0;
 
 GLfloat		vertices[][3] = {
 	{ -1.0, -1.0,  1.0 },	// 0 
@@ -96,22 +96,24 @@ void multi_cube(void) {
 
 	/* right arm */
 	glPushMatrix();
-	glTranslatef(0.0, 0.5 * offset, 0.0);
-	glScalef(0.4, 0.4, 0.8);
+	glTranslatef(0.0, 0.6 * offset, 0.8 + right_move);
 	glRotatef(right, 1.0, 0.0, 0.0);
+	glScalef(0.4, 0.3, 0.8);
 	cube();
 	glPopMatrix();
 
 	/* left arm */
 	glPushMatrix();
-	glTranslatef(0.0, -0.5 * offset, 0.0);
-	glScalef(0.4, 0.4, 0.8);
+	glTranslatef(0.0, -0.6 * offset, 0.8);
+	glRotatef(-90, 1.0, 0.0, 0.0);
+	glScalef(0.4, 0.3, 0.8);
 	cube();
 	glPopMatrix();
 
 	/* head */
 	glPushMatrix();
-	glTranslatef(0.0, 0.0, offset);
+	glTranslatef(0.0, 0.0, 0.5*offset);
+	glScalef(0.7, 0.7, 0.7);
 	cube();
 	glPopMatrix();
 
@@ -167,9 +169,9 @@ void Mykey(unsigned char key, int x, int y)
 		break;
 	case 's':				radius -= 0.1;
 		break;
-	case 'q':				right += 1.0;
+	case 'q':				right += 1.0; right_move += 0.01;
 		break;
-	case 'w':				right -= 1.0;
+	case 'w':				right -= 1.0; right_move -= 0.01;
 		break;
 
 	default: break;
