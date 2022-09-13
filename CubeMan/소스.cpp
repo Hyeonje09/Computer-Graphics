@@ -6,6 +6,7 @@
 
 float	radius, theta, phi;
 float	offset = 3.0;
+float	right = 1.0;
 
 GLfloat		vertices[][3] = {
 	{ -1.0, -1.0,  1.0 },	// 0 
@@ -93,23 +94,38 @@ void camera(void) {
 
 void multi_cube(void) {
 
+	/* right arm */
 	glPushMatrix();
-	glTranslatef(0.0, offset, 0.0);
+	glTranslatef(0.0, 0.5 * offset, 0.0);
+	glScalef(0.4, 0.4, 0.8);
+	glRotatef(right, 1.0, 0.0, 0.0);
 	cube();
 	glPopMatrix();
 
+	/* left arm */
 	glPushMatrix();
-	glTranslatef(0.0, -1.0 * offset, 0.0);
+	glTranslatef(0.0, -0.5 * offset, 0.0);
+	glScalef(0.4, 0.4, 0.8);
 	cube();
 	glPopMatrix();
 
+	/* head */
 	glPushMatrix();
 	glTranslatef(0.0, 0.0, offset);
 	cube();
 	glPopMatrix();
 
+	/* left leg */
 	glPushMatrix();
-	glTranslatef(0.0, 0.0, -1.0 * offset);
+	glTranslatef(0.0, 0.5, -0.75 * offset);
+	glScalef(0.4, 0.4, 1.0);
+	cube();
+	glPopMatrix();
+
+	/* right leg */
+	glPushMatrix();
+	glTranslatef(0.0, -0.5, -0.75 * offset);
+	glScalef(0.4, 0.4, 1.0);
 	cube();
 	glPopMatrix();
 }
@@ -151,6 +167,11 @@ void Mykey(unsigned char key, int x, int y)
 		break;
 	case 's':				radius -= 0.1;
 		break;
+	case 'q':				right += 1.0;
+		break;
+	case 'w':				right -= 1.0;
+		break;
+
 	default: break;
 	}
 	glutPostRedisplay();
