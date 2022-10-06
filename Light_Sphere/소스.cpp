@@ -7,7 +7,7 @@
 
 static int	sphere_drawing_type = 0;
 
-float	sphere_radius = 1.0;
+float	sphere_radius = 2.0;
 float	camera_radius = 5.0;
 float	camera_theta = 0.0;
 float	camera_phi = 0.0;
@@ -17,9 +17,9 @@ float	ver[N][M + 1][3];
 
 /* 광원의 데이터 값 */
 float	light_position[] = { -7.0, 5.0, 5.0, 1.0 };		// 좌표계	
-float	light_ambient[] = { 1.0, 1.0, 0.0, 1.0 };		// 주변광(가장 어두운 부분) -> (R, G, B)
-float	light_diffuse[] = { 1.0, 0.0, 0.0, 1.0 };		// 분산광(전체적인 부분) -> (R, G, B)
-float	light_specular[] = { 0.0, 0.0, 1.0, 1.0 };		// 반사광(밝게 빛나는 부분) -> (R, G, B)
+float	light_ambient[] = { 0.0, 0.3, 0.0, 1.0 };		// 주변광(가장 어두운 부분) -> (R, G, B)
+float	light_diffuse[] = { 3.0, 2.0, 0.0, 1.0 };		// 분산광(전체적인 부분) -> (R, G, B)
+float	light_specular[] = { 1.0, 0.0, 0.0, 1.0 };		// 반사광(밝게 빛나는 부분) -> (R, G, B)
 
 void Vertex_Generation(void) {
 	float	theta, phi;
@@ -36,9 +36,28 @@ void Vertex_Generation(void) {
 		for (int i = 0; i < N; i++) {
 			theta = start_theta + i * delta_theta;
 			phi = start_phi + j * delta_phi;
+
+
+			/* Scale */
 			ver[i][j][0] = sphere_radius * cos(phi) * cos(theta);
 			ver[i][j][1] = sphere_radius * cos(phi) * sin(theta);
 			ver[i][j][2] = sphere_radius * sin(phi);
+				
+			/*
+				Q1. 반지름을 키웠는데, 빛이 이상하다. 왜일까..?
+				A1. 반지름을 키웠으므로 법선벡터가 2배가 되었다. 우리는 원래 법선벡터로 단위벡터를 사용함.
+			*/
+
+			/* Position
+			ver[i][j][0] = sphere_radius + cos(phi) * cos(theta);
+			ver[i][j][1] = sphere_radius + cos(phi) * sin(theta);
+			ver[i][j][2] = sphere_radius + sin(phi);
+	
+				Q1. position만 옮겼는데, 빛이 이상하다. 왜일까..?
+				A1. 위치를 바꾸면 법선벡터가 제대로 계산되지 않는다. 원래 원점에서 시작했던 법선벡터가 옮겨진 지점으로 벡터 방향이 달라짐(glNormal 안에 vertex 위치 정보를 그대로 사용함)
+				Q2. 그럼 위치를 바꿔도 제대로 된 결과를 얻는 방법은?
+				A2.	법선벡터를 제대로 계산하자. -> How? : 실제로 짜보기..?
+			*/
 		}
 	}
 }
